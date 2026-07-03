@@ -2,7 +2,7 @@ import { formatDate, formatStatus, formatType } from "@/app/tasks/pageHelper";
 import { Task } from "@/types/task";
 import { TaskSummary } from "./TaskSummery";
 
-export default function Page({ selectedTask }: { selectedTask: Task | null }) {
+export default function TaskDetails({ selectedTask }: { selectedTask: Task | null }) {
   return (  <div className="rounded-lg bg-white p-5 shadow">
             <h2 className="mb-4 text-xl font-semibold">Task Details</h2>
 

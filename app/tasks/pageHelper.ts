@@ -1,4 +1,4 @@
-import { Task, TaskStatus, TaskType, TaskType } from "@/lib/services/taskApi";
+import { Task, TaskStatus, TaskType } from "@/lib/services/taskApi";
 
 export const PAGE_SIZE = 5;
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { getCachedSummary, saveCachedSummary, type CachedSummary } from "@/lib/storage/summeryCache";
 import { useEffect, useRef, useState } from "react";
 
 interface UseTaskSummaryResult {
@@ -11,35 +12,91 @@ interface UseTaskSummaryResult {
 export function useTaskSummary(taskId: string | null): UseTaskSummaryResult {
   const [content, setContent] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);  
   const sourceRef = useRef<EventSource | null>(null);
 
-  useEffect(() => {
-    // Reset whenever the selected task changes
-    setContent("");
-    setError(null);
-    sourceRef.current?.close();
+  // useEffect(() => {
+  //   // Reset whenever the selected task changes
+  //   setContent("");
+  //   setError(null);
+  //   sourceRef.current?.close();
 
-    if (!taskId) return;
+  //   if (!taskId) return;
+
+  //   setIsStreaming(true);
+
+  //   const source = new EventSource(
+  //     `http://localhost:4000/api/tasks/${taskId}/summary`
+  //   );
+  //   sourceRef.current = source;
+
+  //   source.onmessage = (event) => {
+  //     try {
+  //       // Server encodes each chunk with JSON.stringify, so decode it back
+  //       const chunk: string = JSON.parse(event.data);
+  //       setContent((prev) => prev + chunk);
+  //     } catch {
+  //       // Malformed frame — skip rather than crash the stream
+  //     }
+  //   };
+
+  //   source.addEventListener("done", () => {
+  //     setIsStreaming(false);
+  //     source.close();
+  //   });
+
+  //   source.onerror = () => {
+  //     setError("Lost connection to the summary stream.");
+  //     setIsStreaming(false);
+  //     source.close();
+  //   };
+
+  //   return () => {
+  //     source.close();
+  //     sourceRef.current = null;
+  //   };
+  // }, [taskId]);
+
+
+  useEffect(() => {
+  setContent("");
+  setError(null);
+  sourceRef.current?.close();
+
+  if (!taskId) return;
+
+  async function loadSummary() {
+    const cached:CachedSummary | null = await getCachedSummary(taskId);
+
+    if (cached) {
+      setContent(cached.summary);
+      setIsStreaming(false);
+      return;
+    }
 
     setIsStreaming(true);
+
+    let finalSummary = "";
 
     const source = new EventSource(
       `http://localhost:4000/api/tasks/${taskId}/summary`
     );
+
     sourceRef.current = source;
 
     source.onmessage = (event) => {
       try {
-        // Server encodes each chunk with JSON.stringify, so decode it back
-        const chunk: string = JSON.parse(event.data);
-        setContent((prev) => prev + chunk);
-      } catch {
-        // Malformed frame — skip rather than crash the stream
-      }
+        const chunk = JSON.parse(event.data);
+
+        finalSummary += chunk;
+
+        setContent(finalSummary);
+      } catch {}
     };
 
-    source.addEventListener("done", () => {
+    source.addEventListener("done", async () => {
+      await saveCachedSummary(taskId, finalSummary);
+
       setIsStreaming(false);
       source.close();
     });
@@ -49,12 +106,14 @@ export function useTaskSummary(taskId: string | null): UseTaskSummaryResult {
       setIsStreaming(false);
       source.close();
     };
+  }
 
-    return () => {
-      source.close();
-      sourceRef.current = null;
-    };
-  }, [taskId]);
+  loadSummary();
 
+  return () => {
+    sourceRef.current?.close();
+    sourceRef.current = null;
+  };
+}, [taskId]);
   return { content, isStreaming, error };
 }

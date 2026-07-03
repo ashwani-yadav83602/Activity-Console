@@ -62,8 +62,6 @@ const filteredTasks = useMemo(() => {
   if (isLoading) return <h2>Loading...</h2>;
   if (error) return <h2>Something went wrong</h2>;
 
-  console.log("Filtered Tasks:", search ,tasks.filter((item:any)=>item.title.trim().toLowerCase().includes(search.toLowerCase())   ));
-
   const totalPages = data ? Math.ceil(data.total / data.pageSize) : 1;
   return (
     <main className="min-h-screen bg-gray-100 p-6">
