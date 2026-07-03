@@ -1,41 +1,75 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Activity Console
+
+Activity Console provides a real-time view of system events, user actions, and application logs to help monitor activity and troubleshoot issues.
+
+## Prerequisites
+
+- Node.js (v18 or later recommended)
+- npm
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/ashwani-yadav83602/activity-console.git
+cd activity-console
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Start the Mock Server
 
-## Learn More
+Navigate to the mock server directory and start the backend server:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cd mock-server
+npm install
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> **Note:** Keep the mock server running in a separate terminal.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Start the Frontend
 
-## Deploy on Vercel
+Open another terminal in the project root:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd activity-console
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# Activity-Console
-Activity Console provides a real-time view of system events, user actions, and application logs to help monitor activity and troubleshoot issues.
->>>>>>> 6acc0fa8da46db167e947285efc4e61e67c489c7
+Open http://localhost:3000 in your browser to view the application.
+
+## Features
+
+- Real-time activity feed
+- Search and filter activities
+- Status-based filtering
+- Responsive UI
+- Mock backend server
+- Built with Next.js and TypeScript
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Mock Server
+
+## Project Structure
+
+```
+activity-console/
+├── app/
+├── components/
+├── hooks/
+├── lib/
+├── mock-server/
+└── README.md
+```
